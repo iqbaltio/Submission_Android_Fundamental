@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">GitUser</string>
+    <string name="user_name">Nama</string>
+    <string name="cari">Cari</string>
+    <string name="search_hint">Masukkan Nama</string>
+    <string name="nouser">User Github Tidak Ditemukan</string>
+    <string name="nama_user">Nama User</string>
+    <string name="mengikuti">Following</string>
+    <string name="pengikut">Followers</string>
+    <string name="namagithub">Nama GitHub</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tab_follower">Follower</string>
+    <string name="tab_following">Following</string>
+    <string name="ini_following">Ini Following</string>
+    <string name="ini_follower">Ini Follower</string>
+</resources>
