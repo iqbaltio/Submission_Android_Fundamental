@@ -13,10 +13,17 @@ import com.iqbaltio.gituser.viewmodel.MainViewModel
 import com.iqbaltio.gituser.R
 import com.iqbaltio.gituser.adapter.SectionsPagerAdapter
 import com.iqbaltio.gituser.databinding.ActivityUserDetailBinding
+import com.iqbaltio.gituser.viewmodel.FavoriteViewModel
+import com.iqbaltio.gituser.viewmodel.ViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class UserDetailActivity : AppCompatActivity() {
+class UserDetailActivity : AppCompatActivity(){
     private lateinit var binding: ActivityUserDetailBinding
     private lateinit var viewModel: MainViewModel
+    var _fav = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +37,7 @@ class UserDetailActivity : AppCompatActivity() {
 
         val username = intent.getStringExtra(EXTRADATA).toString()
 
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.getDetailUser(username)
 
         viewModel.detailUser.observe(this) { userDetail ->
@@ -53,6 +60,43 @@ class UserDetailActivity : AppCompatActivity() {
         return true
     }
 
+    private fun getFavoGak(login: String, avatar: String) {
+        val username = intent.getStringExtra(EXTRADATA).toString()
+        val mFavViewModel = obtainViewModel(this@UserDetailActivity)
+        CoroutineScope(Dispatchers.IO).launch {
+            val vCheckUser = mFavViewModel.checkUserFavorite(username)
+            withContext(Dispatchers.Main) {
+                if(vCheckUser.isNotEmpty()){
+                    _fav = true
+                    binding.fab.isSelected = true
+                    binding.fab.setImageResource(R.drawable.baseline_favorite_24)
+                } else {
+                    _fav = false
+                    binding.fab.isSelected = false
+                    binding.fab.setImageResource(R.drawable.baseline_favorite_border_24)
+                }
+            }
+        }
+        binding.fab.setOnClickListener {
+            if(_fav){
+                mFavViewModel.delete(login)
+                _fav = false
+                binding.fab.isSelected = false
+                binding.fab.setImageResource(R.drawable.baseline_favorite_border_24)
+            } else {
+                mFavViewModel.insert(login, avatar)
+                _fav = true
+                binding.fab.isSelected = true
+                binding.fab.setImageResource(R.drawable.baseline_favorite_24)
+            }
+        }
+    }
+
+    private fun obtainViewModel(detilUserActivity: UserDetailActivity): FavoriteViewModel {
+        val factory = ViewModelFactory.getInstance(detilUserActivity.application)
+        return ViewModelProvider(detilUserActivity, factory)[FavoriteViewModel::class.java]
+    }
+
     private fun setDataList(responseBody: DetailResponse) {
         binding.apply {
             tvName.text = responseBody.name
@@ -64,6 +108,7 @@ class UserDetailActivity : AppCompatActivity() {
                 .circleCrop()
                 .into(binding.ImgAvatar)
         }
+        getFavoGak(responseBody.login.toString(),responseBody.avatarUrl.toString())
     }
 
     companion object{

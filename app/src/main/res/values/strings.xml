@@ -13,4 +13,5 @@
     <string name="tab_following">Following</string>
     <string name="ini_following">Ini Following</string>
     <string name="ini_follower">Ini Follower</string>
+    <string name="mode_gelap">Dark Mode</string>
 </resources>

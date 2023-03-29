@@ -28,7 +28,7 @@ data class DetailResponse(
     val followers: Int? = null,
 
     @field:SerializedName("avatar_url")
-    val avatarUrl: String? = null,
+    val avatarUrl: String,
 
     @field:SerializedName("following_url")
     val followingUrl: String? = null,
