@@ -88,4 +88,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.Holo.Light.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        app:layout_constraintBottom_toBottomOf="@+id/ImgAvatar"
+        app:layout_constraintEnd_toEndOf="@+id/ImgAvatar"
+        app:layout_constraintStart_toStartOf="@+id/ImgAvatar"
+        app:layout_constraintTop_toTopOf="@+id/ImgAvatar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

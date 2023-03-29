@@ -57,12 +57,14 @@ class MainViewModel : ViewModel() {
     }
 
     fun getDetailUser(username: String) {
+        _isLoading.value = true
         val client = ApiConfig.getApiService().getDetailUser(username)
         client.enqueue(object : Callback<DetailResponse> {
             override fun onResponse(
                 call: Call<DetailResponse>,
                 response: Response<DetailResponse>
             ) {
+                _isLoading.value = false
                 if (response.isSuccessful) {
                     Log.d(TAG, "Response : ${response.body()}")
                     val responseBody = response.body()
@@ -74,6 +76,7 @@ class MainViewModel : ViewModel() {
                 }
             }
             override fun onFailure(call: Call<DetailResponse>, t: Throwable) {
+                _isLoading.value = false
                 Log.e(TAG, "onFailure: ${t.message}")
             }
         })

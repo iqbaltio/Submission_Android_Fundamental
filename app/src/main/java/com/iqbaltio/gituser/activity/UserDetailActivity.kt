@@ -2,6 +2,7 @@ package com.iqbaltio.gituser.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
@@ -43,6 +44,8 @@ class UserDetailActivity : AppCompatActivity(){
         viewModel.detailUser.observe(this) { userDetail ->
             setDataList(userDetail)
         }
+
+        viewModel.isLoading.observe(this, ::showLoading)
 
         val sectionsPagerAdapter = SectionsPagerAdapter(this)
         sectionsPagerAdapter.username = username
@@ -109,6 +112,10 @@ class UserDetailActivity : AppCompatActivity(){
                 .into(binding.ImgAvatar)
         }
         getFavoGak(responseBody.login.toString(),responseBody.avatarUrl.toString())
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     companion object{
