@@ -17,6 +17,8 @@ import com.iqbaltio.gituser.viewmodel.MainViewModel
 import com.iqbaltio.gituser.R
 import com.iqbaltio.gituser.adapter.UserAdapter
 import com.iqbaltio.gituser.databinding.ActivityMainBinding
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,15 +56,23 @@ class MainActivity : AppCompatActivity() {
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         searchView.queryHint = resources.getString(R.string.search_hint)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
+        var searchJob: Job? = null
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 searchView.clearFocus()
                 mainViewModel.searchUser(query)
                 return true
             }
             override fun onQueryTextChange(newText: String): Boolean {
-                mainViewModel.searchUser(newText)
+                searchJob?.cancel()
+                searchJob = CoroutineScope(Dispatchers.Main).launch {
+                    delay(500)
+                    if (newText.isNotEmpty()) {
+                        mainViewModel.searchUser(newText)
+                    }
+                }
                 return false
             }
         })
